@@ -70,7 +70,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign(
       { userId: user.id, role: user.role },
       JWT_SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '7d' }
     );
 
     res.json({ message: '로그인 성공', token });

@@ -29,7 +29,10 @@ const authMiddleware = async (req, res, next) => {
       return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
     }
 
-    req.user = user; // 이후 미들웨어나 컨트롤러에서 req.user로 접근 가능
+    req.user = {
+      userId: user.id,      // ✅ 이 한 줄만 추가
+      role: user.role
+    }; // 이후 미들웨어나 컨트롤러에서 req.user로 접근 가능
     next();
   } catch (err) {
     console.error('❌ JWT 인증 실패:', err.message);

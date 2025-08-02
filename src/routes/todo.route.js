@@ -116,4 +116,30 @@ router.put('/:id', authMiddleware, todoController.updateTodo);
  */
 router.delete('/:id', authMiddleware, todoController.deleteTodo);
 
+/**
+ * @swagger
+ * /todos/{id}/toggle:
+ *   patch:
+ *     summary: 할 일 완료 상태 토글
+ *     tags: [Todos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: 토글된 할 일 반환
+ *       404:
+ *         description: 해당 할 일을 찾을 수 없음
+ *       403:
+ *         description: 권한 없음
+ *       500:
+ *         description: 서버 오류
+ */
+router.patch('/:id/toggle', authMiddleware, todoController.toggleTodoStatus);
+
 module.exports = router;

@@ -102,3 +102,36 @@ exports.deleteTodo = async (req, res) => {
     res.status(500).json({ error: '삭제 실패' });
   }
 };
+
+// 할 일 완료 상태 토글
+exports.toggleTodoStatus = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.userId;
+  console.log('🧪 토큰에서 가져온 userId:', userId);
+
+  try {
+    const todo = await prisma.todo.findUnique({
+      where: { id: Number(id) }
+    });
+
+    if (!todo) {
+      return res.status(404).json({ error: '해당 할 일을 찾을 수 없습니다.' });
+    }
+
+    if (todo.userId !== userId) {
+      return res.status(403).json({ error: '토글 권한이 없습니다.' });
+    }
+
+    const updatedTodo = await prisma.todo.update({
+      where: { id: Number(id) },
+      data: {
+        isDone: !todo.isDone
+      }
+    });
+
+    res.json(updatedTodo);
+  } catch (error) {
+    console.error('🔥 토글 오류:', error);
+    res.status(500).json({ error: '완료 상태 토글 실패' });
+  }
+};
