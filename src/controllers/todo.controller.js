@@ -20,7 +20,7 @@ exports.createTodo = async (req, res) => {
     });
     res.status(201).json(newTodo);
   } catch (error) {
-    console.error(error);
+    console.error('🔥 Todo 생성 오류:', error);
     res.status(500).json({ error: '할 일 생성 실패' });
   }
 };
@@ -30,8 +30,14 @@ exports.getTodos = async (req, res) => {
   const userId = req.user.userId;
 
   try {
+    const { done } = req.query;
+    const where = { userId };
+
+    if (done === 'true') where.isDone = true;
+    if (done === 'false') where.isDone = false;
+
     const todos = await prisma.todo.findMany({
-      where: { userId },
+      where,
       orderBy: { createdAt: 'desc' }
     });
     res.json(todos);

@@ -31,8 +31,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
  *             properties:
  *               content:
  *                 type: string
- *               isDone:
- *                 type: boolean
+ *               
  *     responses:
  *       200:
  *         description: 생성된 할 일을 반환
@@ -45,10 +44,16 @@ router.post('/', authMiddleware, todoController.createTodo);
  * @swagger
  * /todos:
  *   get:
- *     summary: 로그인한 유저의 할 일 전체 조회
+ *     summary: 로그인한 유저의 할 일 전체 또는 필터 조회
  *     tags: [Todos]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: done
+ *         schema:
+ *           type: boolean
+ *         description: true 또는 false로 완료 여부 필터
  *     responses:
  *       200:
  *         description: 할 일 배열 반환
