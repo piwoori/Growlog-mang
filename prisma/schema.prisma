@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int          @id @default(autoincrement())
+  email      String       @unique
+  password   String
+  nickname   String       @unique @default("user")
+  role      String   @default("USER")
+  createdAt  DateTime     @default(now())
+
+  todos       Todo[]
+  reflections Reflection[]
+  emotions    Emotion[]
+}
+
+model Todo {
+  id        Int      @id @default(autoincrement())
+  content   String
+  isDone    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+}
+
+
+model Reflection {
+  id         Int       @id @default(autoincrement())
+  content    String
+  date       DateTime  @default(now())
+  userId     Int
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Emotion {
+  id         Int       @id @default(autoincrement())
+  emoji      String    // 😊, 😢, 😡 등
+  date       DateTime  @default(now())
+  userId     Int
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
