@@ -30,6 +30,7 @@
 
 ## 🗂️ 폴더 구조
 
+```
 growlog-backend/
 ├── app.js
 ├── .env.example
@@ -37,11 +38,11 @@ growlog-backend/
 ├── /controllers
 ├── /middlewares
 ├── /prisma
-│ └── schema.prisma
+│   └── schema.prisma
 ├── /docs
-│ └── swagger.yaml
+│   └── swagger.yaml
 └── /utils
-
+```
 
 ---
 
@@ -65,42 +66,43 @@ npx prisma migrate dev --name init
 
 # 6. 서버 실행
 npm run dev
+```
 
 ---
 
+## 🔐 .env 환경 변수 예시
 
-🔐 .env 환경 변수 예시
-
+```env
 PORT=4000
 DATABASE_URL=postgresql://user:password@localhost:5432/growlog
 JWT_SECRET=your_jwt_secret_key
+```
 
 ---
 
+## 🧪 API 문서 (Swagger)
 
-🧪 API 문서 (Swagger)
-
-/docs/swagger.yaml 참고
+`/docs/swagger.yaml` 참고  
 또는 서버 실행 후 아래 주소 접속:
+
+```
 http://localhost:4000/api-docs
+```
 
 ---
 
+## 📦 사용된 주요 라이브러리
 
-📦 사용된 주요 라이브러리
-
-express
-dotenv
-jsonwebtoken
-bcrypt
-prisma
-cors
-swagger-ui-express
-
+- `express`
+- `dotenv`
+- `jsonwebtoken`
+- `bcrypt`
+- `prisma`
+- `cors`
+- `swagger-ui-express`
 
 ---
 
-
-📄 라이선스
+## 📄 라이선스
 
 본 프로젝트는 MIT 라이선스를 따릅니다.
