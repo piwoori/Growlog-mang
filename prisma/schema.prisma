@@ -35,6 +35,7 @@ model Reflection {
   content    String
   createdAt  DateTime  @default(now())
   emotionId  Int?      @unique
+  date       DateTime  @default(now())
 
   user       User      @relation(fields: [userId], references: [id])
   emotion    Emotion?  @relation(fields: [emotionId], references: [id])

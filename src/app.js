@@ -4,10 +4,12 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./docs/swagger');
+
 const authRouter = require('./routes/auth.route');
 const todoRouter = require('./routes/todo.route');
 const reflectionRouter = require('./routes/reflection.route');
-const emotionRouter = require('./routes/emotion.route'); // ✅ 감정 라우터 추가
+const emotionRouter = require('./routes/emotion.route');
+const dailyRouter = require('./routes/daily.route'); // ✅ 날짜별 회고 & 감정 조회 라우터 추가
 
 const { authenticateToken } = require('./middlewares/authMiddleware');
 
@@ -42,7 +44,8 @@ const swaggerOptions = {
 app.use('/auth', authRouter);
 app.use('/todos', authenticateToken, todoRouter);
 app.use('/reflections', reflectionRouter);
-app.use('/emotions', authenticateToken, emotionRouter); // ✅ 감정 라우터 등록
+app.use('/emotions', authenticateToken, emotionRouter);
+app.use('/daily', authenticateToken, dailyRouter); // ✅ 등록 추가
 
 // 📘 Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, swaggerOptions));
