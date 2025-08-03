@@ -1,7 +1,7 @@
-const authMiddleware = require('../middlewares/authMiddleware');
-const adminMiddleware = require('../middlewares/adminMiddleware');
 const express = require('express');
 const router = express.Router();
+const { authenticateToken } = require('../middlewares/authMiddleware'); // ✅ 구조 분해 할당
+const adminMiddleware = require('../middlewares/adminMiddleware');
 const {
   signup,
   login,
@@ -126,6 +126,7 @@ router.post('/login', login);
  * /auth/me:
  *   get:
  *     summary: 유저 정보 조회
+ *     description: 로그인한 사용자의 정보를 반환합니다.
  *     tags: [Auth]
  *     security:
  *       - bearerAuth: []
@@ -139,14 +140,21 @@ router.post('/login', login);
  *               properties:
  *                 id:
  *                   type: integer
+ *                   example: 5
  *                 email:
  *                   type: string
+ *                   example: testfix@email.com
  *                 nickname:
  *                   type: string
+ *                   example: 테스트유저
+ *                 role:
+ *                   type: string
+ *                   example: USER
  *       401:
  *         description: 인증 실패
  */
-router.get('/me', authMiddleware, getMe);
+router.get('/me', authenticateToken, getMe);
+
 
 /**
  * @swagger
@@ -164,38 +172,7 @@ router.get('/me', authMiddleware, getMe);
  *       500:
  *         description: 서버 오류
  */
-router.delete('/delete', authMiddleware, deleteAccount);
-
-/**
- * @swagger
- * /auth/users:
- *   get:
- *     summary: 전체 유저 목록 조회
- *     tags: [Auth]
- *     description: 현재 가입된 모든 유저의 이메일, 닉네임, ID를 조회합니다.
- *     responses:
- *       200:
- *         description: 유저 목록 반환
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                     example: 1
- *                   email:
- *                     type: string
- *                     example: test@email.com
- *                   nickname:
- *                     type: string
- *                     example: growuser
- *       500:
- *         description: 서버 오류
- */
-router.get('/users', getAllUsers); // 🔓 테스트용, 인증 없이 열어둠
+router.delete('/delete', authenticateToken, deleteAccount);
 
 /**
  * @swagger
@@ -211,6 +188,6 @@ router.get('/users', getAllUsers); // 🔓 테스트용, 인증 없이 열어둠
  *       403:
  *         description: 관리자 권한 없음
  */
-router.get('/users', authMiddleware, adminMiddleware, getAllUsers);
+router.get('/users', authenticateToken, adminMiddleware, getAllUsers);
 
 module.exports = router;

@@ -1,9 +1,7 @@
-// src/routes/todo.route.js
-
 const express = require('express');
 const router = express.Router();
 const todoController = require('../controllers/todo.controller');
-const authMiddleware = require('../middlewares/authMiddleware');
+const { authenticateToken } = require('../middlewares/authMiddleware'); // ✅ 구조분해 import
 
 /**
  * @swagger
@@ -39,7 +37,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
  *       500:
  *         description: 서버 오류
  */
-router.post('/', authMiddleware, todoController.createTodo);
+router.post('/', authenticateToken, todoController.createTodo);
 
 /**
  * @swagger
@@ -55,7 +53,7 @@ router.post('/', authMiddleware, todoController.createTodo);
  *       500:
  *         description: 서버 오류
  */
-router.get('/', authMiddleware, todoController.getTodos);
+router.get('/', authenticateToken, todoController.getTodos);
 
 /**
  * @swagger
@@ -90,7 +88,7 @@ router.get('/', authMiddleware, todoController.getTodos);
  *       500:
  *         description: 서버 오류
  */
-router.put('/:id', authMiddleware, todoController.updateTodo);
+router.put('/:id', authenticateToken, todoController.updateTodo);
 
 /**
  * @swagger
@@ -114,7 +112,7 @@ router.put('/:id', authMiddleware, todoController.updateTodo);
  *       500:
  *         description: 서버 오류
  */
-router.delete('/:id', authMiddleware, todoController.deleteTodo);
+router.delete('/:id', authenticateToken, todoController.deleteTodo);
 
 /**
  * @swagger
@@ -140,6 +138,6 @@ router.delete('/:id', authMiddleware, todoController.deleteTodo);
  *       500:
  *         description: 서버 오류
  */
-router.patch('/:id/toggle', authMiddleware, todoController.toggleTodoStatus);
+router.patch('/:id/toggle', authenticateToken, todoController.toggleTodoStatus);
 
 module.exports = router;

@@ -30,9 +30,12 @@ const authMiddleware = async (req, res, next) => {
     }
 
     req.user = {
-      userId: user.id,      // ✅ 이 한 줄만 추가
-      role: user.role
-    }; // 이후 미들웨어나 컨트롤러에서 req.user로 접근 가능
+      id: user.id,
+      email: user.email,
+      nickname: user.nickname,
+      role: user.role,
+    };
+
     next();
   } catch (err) {
     console.error('❌ JWT 인증 실패:', err.message);
@@ -40,4 +43,5 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+module.exports = { authenticateToken: authMiddleware };
+

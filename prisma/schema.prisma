@@ -45,3 +45,29 @@ model Emotion {
   userId     Int
   user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model Reflection {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  content    String
+  createdAt  DateTime  @default(now())
+  emotionId  Int?      // 감정과 연결 (선택)
+
+  user       User      @relation(fields: [userId], references: [id])
+  emotion    Emotion?  @relation(fields: [emotionId], references: [id])
+
+  @@index([userId])
+}
+
+model Emotion {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  emoji      String
+  date       DateTime
+  reflection Reflection?
+
+  user       User      @relation(fields: [userId], references: [id])
+
+  @@unique([userId, date]) // 같은 날짜에 한 번만 기록 가능
+  @@index([userId])
+}

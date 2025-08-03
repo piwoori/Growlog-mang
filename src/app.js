@@ -6,7 +6,8 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./docs/swagger');
 const authRouter = require('./routes/auth.route');
 const todoRouter = require('./routes/todo.route');
-const authMiddleware = require('./middlewares/authMiddleware');
+const { authenticateToken } = require('./middlewares/authMiddleware'); // ✅ 변경된 부분
+const reflectionRouter = require('./routes/reflection.route');
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ const app = express();
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
+app.use('/reflections', reflectionRouter);
 
 // 🔐 Swagger 자동 토큰 주입 설정
 const swaggerToken = `${process.env.SWAGGER_SAMPLE_TOKEN}`;
@@ -37,7 +39,7 @@ const swaggerOptions = {
 
 // 🛣️ 라우터 등록
 app.use('/auth', authRouter);
-app.use('/todos', authMiddleware, todoRouter);
+app.use('/todos', authenticateToken, todoRouter); // ✅ 함수로 적용
 
 // 📘 Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, swaggerOptions));
