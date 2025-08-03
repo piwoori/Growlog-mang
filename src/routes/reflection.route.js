@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createReflection } = require('../controllers/reflection.controller');
+const { createReflection, getReflections } = require('../controllers/reflection.controller');
 const { authenticateToken } = require('../middlewares/authMiddleware');
 
 /**
@@ -45,5 +45,40 @@ const { authenticateToken } = require('../middlewares/authMiddleware');
  *         description: 서버 오류
  */
 router.post('/', authenticateToken, createReflection);
+
+/**
+ * @swagger
+ * /reflections:
+ *   get:
+ *     summary: 회고 목록 조회
+ *     tags: [Reflections]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: 회고 목록 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 reflections:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       content:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *       401:
+ *         description: 인증 실패
+ *       500:
+ *         description: 서버 오류
+ */
+router.get('/', authenticateToken, getReflections);
 
 module.exports = router;
