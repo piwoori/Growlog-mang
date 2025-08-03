@@ -51,6 +51,6 @@ model Emotion {
 
   user       User      @relation(fields: [userId], references: [id])
 
-  @@unique([userId, date]) // 같은 날짜에 한 번만 기록 가능
+  @@unique([userId, date], name: "userId_date")
   @@index([userId])
 }
