@@ -6,7 +6,10 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./docs/swagger');
 const authRouter = require('./routes/auth.route');
 const todoRouter = require('./routes/todo.route');
-const authMiddleware = require('./middlewares/authMiddleware');
+const reflectionRouter = require('./routes/reflection.route');
+const emotionRouter = require('./routes/emotion.route'); // ✅ 감정 라우터 추가
+
+const { authenticateToken } = require('./middlewares/authMiddleware');
 
 dotenv.config();
 
@@ -37,7 +40,9 @@ const swaggerOptions = {
 
 // 🛣️ 라우터 등록
 app.use('/auth', authRouter);
-app.use('/todos', authMiddleware, todoRouter);
+app.use('/todos', authenticateToken, todoRouter);
+app.use('/reflections', reflectionRouter);
+app.use('/emotions', authenticateToken, emotionRouter); // ✅ 감정 라우터 등록
 
 // 📘 Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, swaggerOptions));

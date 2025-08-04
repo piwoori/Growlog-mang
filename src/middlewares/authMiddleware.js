@@ -1,4 +1,3 @@
-// src/middleware/authMiddleware.js
 require('dotenv').config(); // 꼭 필요
 
 const jwt = require('jsonwebtoken');
@@ -28,8 +27,10 @@ const authMiddleware = async (req, res, next) => {
     }
 
     req.user = {
-      userId: user.id,
-      role: user.role
+      id: user.id,
+      email: user.email,
+      nickname: user.nickname,
+      role: user.role,
     }; // 이후 미들웨어나 컨트롤러에서 req.user로 접근 가능
 
     next();
@@ -39,4 +40,4 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+module.exports = { authenticateToken: authMiddleware };
