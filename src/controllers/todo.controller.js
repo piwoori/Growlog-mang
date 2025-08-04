@@ -1,3 +1,5 @@
+// src/controllers/todo.controller.js
+
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -139,5 +141,34 @@ exports.toggleTodoStatus = async (req, res) => {
   } catch (error) {
     console.error('🔥 토글 오류:', error);
     res.status(500).json({ error: '완료 상태 토글 실패' });
+  }
+};
+
+// ✅ 할 일 달성률 통계
+exports.getTodoStatistics = async (req, res) => {
+  const userId = req.user.userId;
+
+  try {
+    const total = await prisma.todo.count({
+      where: { userId }
+    });
+
+    const completed = await prisma.todo.count({
+      where: {
+        userId,
+        isDone: true
+      }
+    });
+
+    const rate = total === 0 ? 0 : Math.round((completed / total) * 100);
+
+    res.status(200).json({
+      total,
+      completed,
+      rate
+    });
+  } catch (error) {
+    console.error('🔥 통계 조회 오류:', error);
+    res.status(500).json({ error: '할 일 통계 조회 실패' });
   }
 };

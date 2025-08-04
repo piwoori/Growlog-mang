@@ -16,7 +16,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
  * @swagger
  * /todos:
  *   post:
- *     summary: 할 일 생성
+ *     summary: "할 일 생성"
  *     tags: [Todos]
  *     security:
  *       - bearerAuth: []
@@ -31,12 +31,11 @@ const authMiddleware = require('../middlewares/authMiddleware');
  *             properties:
  *               content:
  *                 type: string
- *               
  *     responses:
  *       200:
- *         description: 생성된 할 일을 반환
+ *         description: "생성된 할 일을 반환"
  *       500:
- *         description: 서버 오류
+ *         description: "서버 오류"
  */
 router.post('/', authMiddleware, todoController.createTodo);
 
@@ -44,7 +43,7 @@ router.post('/', authMiddleware, todoController.createTodo);
  * @swagger
  * /todos:
  *   get:
- *     summary: 로그인한 유저의 할 일 전체 또는 필터 조회
+ *     summary: "로그인한 유저의 할 일 전체 또는 필터 조회"
  *     tags: [Todos]
  *     security:
  *       - bearerAuth: []
@@ -53,12 +52,12 @@ router.post('/', authMiddleware, todoController.createTodo);
  *         name: done
  *         schema:
  *           type: boolean
- *         description: true 또는 false로 완료 여부 필터
+ *         description: "true 또는 false로 완료 여부 필터"
  *     responses:
  *       200:
- *         description: 할 일 배열 반환
+ *         description: "할 일 배열 반환"
  *       500:
- *         description: 서버 오류
+ *         description: "서버 오류"
  */
 router.get('/', authMiddleware, todoController.getTodos);
 
@@ -66,7 +65,7 @@ router.get('/', authMiddleware, todoController.getTodos);
  * @swagger
  * /todos/{id}:
  *   put:
- *     summary: 할 일 수정
+ *     summary: "할 일 수정"
  *     tags: [Todos]
  *     security:
  *       - bearerAuth: []
@@ -89,11 +88,11 @@ router.get('/', authMiddleware, todoController.getTodos);
  *                 type: boolean
  *     responses:
  *       200:
- *         description: 수정된 할 일을 반환
+ *         description: "수정된 할 일을 반환"
  *       404:
- *         description: 존재하지 않는 ID
+ *         description: "존재하지 않는 ID"
  *       500:
- *         description: 서버 오류
+ *         description: "서버 오류"
  */
 router.put('/:id', authMiddleware, todoController.updateTodo);
 
@@ -101,7 +100,7 @@ router.put('/:id', authMiddleware, todoController.updateTodo);
  * @swagger
  * /todos/{id}:
  *   delete:
- *     summary: 할 일 삭제
+ *     summary: "할 일 삭제"
  *     tags: [Todos]
  *     security:
  *       - bearerAuth: []
@@ -113,11 +112,11 @@ router.put('/:id', authMiddleware, todoController.updateTodo);
  *           type: integer
  *     responses:
  *       200:
- *         description: 삭제 완료 메시지
+ *         description: "삭제 완료 메시지"
  *       404:
- *         description: 존재하지 않는 ID
+ *         description: "존재하지 않는 ID"
  *       500:
- *         description: 서버 오류
+ *         description: "서버 오류"
  */
 router.delete('/:id', authMiddleware, todoController.deleteTodo);
 
@@ -125,7 +124,7 @@ router.delete('/:id', authMiddleware, todoController.deleteTodo);
  * @swagger
  * /todos/{id}/toggle:
  *   patch:
- *     summary: 할 일 완료 상태 토글
+ *     summary: "할 일 완료 상태 토글"
  *     tags: [Todos]
  *     security:
  *       - bearerAuth: []
@@ -137,14 +136,41 @@ router.delete('/:id', authMiddleware, todoController.deleteTodo);
  *           type: integer
  *     responses:
  *       200:
- *         description: 토글된 할 일 반환
+ *         description: "토글된 할 일 반환"
  *       404:
- *         description: 해당 할 일을 찾을 수 없음
+ *         description: "해당 할 일을 찾을 수 없음"
  *       403:
- *         description: 권한 없음
+ *         description: "권한 없음"
  *       500:
- *         description: 서버 오류
+ *         description: "서버 오류"
  */
 router.patch('/:id/toggle', authMiddleware, todoController.toggleTodoStatus);
+
+/**
+ * @swagger
+ * /todos/statistics:
+ *   get:
+ *     summary: "할 일 달성률 통계"
+ *     description: "사용자의 전체 할 일 중 완료된 할 일의 개수 및 달성률(%)을 반환합니다."
+ *     tags: [Todos]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: "할 일 통계 조회 성공"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 total: 10
+ *                 completed: 7
+ *                 rate: 70
+ *       401:
+ *         description: "인증 실패"
+ *       500:
+ *         description: "서버 오류"
+ */
+router.get('/statistics', authMiddleware, todoController.getTodoStatistics);
 
 module.exports = router;
