@@ -9,7 +9,6 @@ const authMiddleware = async (req, res, next) => {
 
   console.log('🧪 Authorization Header:', authHeader);
 
-  // 토큰이 없거나 형식이 잘못된 경우
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: '토큰 없음 또는 형식 오류' });
   }
@@ -20,9 +19,8 @@ const authMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log('✅ 디코딩된 토큰:', decoded);
 
-    // 토큰 payload에서 userId를 꺼내 사용자 조회
     const user = await prisma.user.findUnique({
-      where: { id: decoded.userId }, // 또는 decoded.id 라면 여기도 바꿔야 해
+      where: { id: decoded.userId },
     });
 
     if (!user) {
@@ -30,9 +28,10 @@ const authMiddleware = async (req, res, next) => {
     }
 
     req.user = {
-      userId: user.id,      // ✅ 이 한 줄만 추가
+      userId: user.id,
       role: user.role
     }; // 이후 미들웨어나 컨트롤러에서 req.user로 접근 가능
+
     next();
   } catch (err) {
     console.error('❌ JWT 인증 실패:', err.message);
